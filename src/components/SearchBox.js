@@ -1,15 +1,26 @@
 import React, { Component } from "react";
-import dataObj from "../all_badged_students.json";
+import axios from "axios";
 import PropTypes from "prop-types";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { withStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
+import SearchResults from "./SearchResults";
 import "typeface-roboto";
 
 const styles = theme => ({
   root: {
     width: "100%",
     maxWidth: 500
+  },
+  paper: {
+    padding: theme.spacing.unit,
+    textAlign: "center",
+    color: theme.palette.text.secondary,
+    whiteSpace: "nowrap",
+    marginBottom: theme.spacing.unit,
+    width: "90%"
+  },
+  searchInput: {
+    padding: "20px"
   }
 });
 
@@ -20,7 +31,9 @@ class SearchBox extends Component {
     this.state = {
       searchArr: [],
       name: "",
-      badgedDate: ""
+      badgedDate: "",
+      searchResults: [],
+      fetchingData: false
     };
   }
 
@@ -30,37 +43,39 @@ class SearchBox extends Component {
     });
   };
 
-  render() {
-    let searchFilter = dataObj.filter((e, i, arr) =>
-      e.issued_to.toLowerCase().includes(this.state.name.toLowerCase())
-    );
-
-    const searchArrMap = searchFilter.map((e, i) => {
-      return (
-        <Paper key={i} elevation={1} className={this.props.paper}>
-          <Typography variant="display1" gutterBottom>
-            {e.issued_to}
-          </Typography>{" "}
-          <Typography variant="body1">
-            Badged Date: {e.issued_at_date} Program:{" "}
-            {e.badge_template.vanity_slug}
-          </Typography>{" "}
-          {e.evidence.map((val, id) => {
-            return (
-              <div key={id}>
-                {" "}
-                {val.name} {val.value}{" "}
-              </div>
-            );
-          })}
-        </Paper>
-      );
+  handleQuery = () => {
+    this.setState({
+      fetchingData: true
     });
+    axios.post("/api/acclaim", { name: `${this.state.name}` }).then(results => {
+      this.setState({
+        searchResults: results.data.data,
+        fetchingData: false
+      });
+    });
+  };
+
+  renderContent = () => {
+    switch (this.state.fetchingData) {
+      case true:
+        return <CircularProgress />;
+      case false:
+        return <SearchResults searchResults={this.state.searchResults} />;
+      default:
+        return <SearchResults searchResults={this.state.searchResults} />;
+    }
+  };
+
+  render() {
     return (
       <div>
-        Name:
-        <input value={this.state.name} onChange={this.handleNameChange} />
-        {searchArrMap}
+        <h1> DevMountain Badged Grad Search</h1>
+        <div style={{ paddingBottom: "20px" }}>
+          Name:
+          <input value={this.state.name} onChange={this.handleNameChange} />
+          <button onClick={this.handleQuery}>Search</button>
+        </div>
+        {this.renderContent()}
       </div>
     );
   }
