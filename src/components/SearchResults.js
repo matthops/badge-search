@@ -59,7 +59,7 @@ class SearchResults extends Component {
             {e.evidence.map((val, id) => {
               if (val.name === "Personal Portfolio") {
                 return (
-                  <Grid item xs={4} zeroMinWidth key={id}>
+                  <Grid item xs={3} zeroMinWidth key={id}>
                     <Typography variant="body2">{val.name}</Typography>
                     <Link
                       color="inherit"
