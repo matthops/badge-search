@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import SearchResults from "./SearchResults";
 import "typeface-roboto";
@@ -19,8 +22,13 @@ const styles = theme => ({
     marginBottom: theme.spacing.unit,
     width: "90%"
   },
-  searchInput: {
-    padding: "20px"
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    paddingBottom: "20px"
+  },
+  buttonStyle: {
+    marginTop: "20px"
   }
 });
 
@@ -67,14 +75,32 @@ class SearchBox extends Component {
   };
 
   render() {
+    const { classes } = this.props;
     return (
       <div>
-        <h1> DevMountain Badged Grad Search</h1>
-        <div style={{ paddingBottom: "20px" }}>
-          Name:
-          <input value={this.state.name} onChange={this.handleNameChange} />
-          <button onClick={this.handleQuery}>Search</button>
-        </div>
+        <Typography variant="h3" gutterBottom>
+          DevMountain Badged Grad Search
+        </Typography>
+        {/* <div style={{ paddingBottom: "20px" }}> */}
+        <form>
+          <TextField
+            label="Grad Name"
+            className={classes.textField}
+            value={this.state.name}
+            onChange={this.handleNameChange}
+            margin="normal"
+            // variant="outlined"
+          />
+          <Button
+            onClick={this.handleQuery}
+            size="large"
+            className={classes.buttonStyle}
+            variant="outlined"
+          >
+            Search
+          </Button>
+        </form>
+        {/* </div> */}
         {this.renderContent()}
       </div>
     );
