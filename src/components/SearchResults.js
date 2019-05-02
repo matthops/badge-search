@@ -4,6 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import Link from "@material-ui/core/Link";
 import "typeface-roboto";
 
 const styles = theme => ({
@@ -49,7 +50,9 @@ class SearchResults extends Component {
                 return (
                   <Grid item xs={3} zeroMinWidth key={id}>
                     <Typography variant="body2">{val.name}</Typography>
-                    {val.value}{" "}
+                    <Link color="inherit" variant="body1" href={val.value}>
+                      {val.value}
+                    </Link>
                   </Grid>
                 );
               }
